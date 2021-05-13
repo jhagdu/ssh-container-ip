@@ -1,0 +1,24 @@
+- name: "Adding Docker Yum Repository"
+  yum_repository:
+    name: docker
+    description: Yum Repository for Docker
+    baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+    gpgcheck: no
+
+- name: "Check weather Docker is installed or not"
+  package_facts:
+    manager: auto
+
+- name: "Installing Docker if not"
+  command: "dnf install docker-ce --nobest -y"
+  register: dkr_install
+  when: "'docker-ce' not in ansible_facts.packages"
+
+- name: "Start Docker Service"
+  service:
+    name: "docker"
+    state: started
+    enabled: yes
+  failed_when:
+    - "'docker-ce' not in ansible_facts.packages"
+    - "dkr_install.rc != 0"

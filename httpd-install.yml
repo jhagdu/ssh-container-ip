@@ -1,0 +1,26 @@
+- name: Installing HTTPD Webserver
+  package: 
+    name: httpd
+    state: present
+  register: httpd_install
+
+- name: Start HTTPD Service
+  command: /usr/sbin/httpd
+  failed_when: "httpd_install.rc != 0"
+  
+- name: "Copy WebPages from Controller to Managed Docker Node"
+  copy:
+    content: |
+      <!DOCTYPE html>
+      <html>
+          <head><title>ARTH Task</title></head>
+          <body bgcolor="#54B5AB">
+            <center>
+                <h1>SSH Enabled Container</h1>
+                <h2>Retrieve the IP of SSH enabled container dynamically and then Install webserver in it using Ansible</h2><br>
+                <img src="https://miro.medium.com/max/875/0*ijEA6ocv7g-ggbTZ.gif" height=500 />
+                <h3>Thanks Vimal Daga Sir<br>LinuxWorld Informatics Pvt. Ltd.</h3>
+            </center>            
+          </body>
+      </html>
+    dest: /var/www/html/index.html

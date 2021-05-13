@@ -1,0 +1,39 @@
+- name: "Install Python"
+  package:
+    name: "python3"
+    state: present
+  register: pytn_install
+
+- name: "Check Is Docker SDK Already installed"
+  command: "pip3 list | grep docker"
+  register: sdk_check
+
+- name: "Install Docker SDK if not"
+  command: "pip3 install docker"
+  when: "sdk_check.rc != 0"
+
+
+- name: "Build an SSH enabled Image"
+  docker_image:
+    source: build
+    build:
+      path: ./Docker
+    name: jhagdu/ssh
+    tag: latest
+    push: no
+
+- name: "Start Docker Container"
+  docker_container:
+    name: web
+    image: jhagdu/ssh
+    pull: yes
+    state: started
+    env:
+      ROOT_PASSWD: "{{ cont_root_passwd }}"
+    exposed_ports:
+    - "80"
+    - "22"
+    ports:
+    - "{{ exposed_web_port }}:80"
+    - "{{ exposed_ssh_port }}:22"
+  register: cntnr_info

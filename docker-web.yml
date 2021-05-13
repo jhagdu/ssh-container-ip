@@ -1,0 +1,30 @@
+- hosts: localhost
+  gather_facts: no
+  vars:
+    exposed_ssh_port: 2222
+    exposed_web_port: 8080
+    cont_root_passwd: "toor"
+  tasks:
+  - name: "Install and Configure Docker"
+    include: docker-install.yml
+
+  - name: "Build and Run the Container"
+    include: run-container.yml
+
+  - name: "Add Docker Container IP to Inventory"
+    add_host:
+      name: "{{ cntnr_info.container.NetworkSettings.Networks.bridge.IPAddress }}"
+      groups: dockerweb
+      ansible_ssh_user: "root"
+      ansible_ssh_pass: "{{ cont_root_passwd }}"
+
+  - name: "Wait for some seconds"
+    pause:
+      seconds: 7
+
+
+- hosts: dockerweb
+  gather_facts: no
+  tasks:
+  - name: "Install and Configure Webserver"
+    include: httpd-install.yml
