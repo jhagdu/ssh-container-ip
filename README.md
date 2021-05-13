@@ -4,7 +4,7 @@ Ansible Playbook to retrieve the IP of SSH enabled container dynamically and the
 
 ## Links
 
-[Click here for Video and Post](https://www.linkedin.com/in/amanjhagrolia143)
+[Click here for Video and Post](https://www.linkedin.com/posts/amanjhagrolia143_rightmentor-righteducation-worldrecordholder-activity-6798462095575851008-3nwN)
 
 ***Feel free to Contact if any issue!!***
 
